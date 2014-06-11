@@ -20,15 +20,19 @@ public class ListTransition {
 		return listTransition.get(index);
 	}
 	
-	public Transition findBy2S(State s1, State s2){
+
+	public ArrayList<Transition> findListBy2S(State state1, State state2) {
+		
+		ArrayList<Transition> listTrans = new ArrayList<Transition>();
 		
 		for (int i=0; i<listTransition.size(); i++){
-			if (s1==listTransition.get(i).getBeginState() && s2==listTransition.get(i).getEndState()){
-				return listTransition.get(i);
+			if (state1==listTransition.get(i).getBeginState() && state2==listTransition.get(i).getEndState()){
+				listTrans.add(listTransition.get(i));
+				//return arrTransition.get(i);
 			}
 		}
 		
-		return null;
+		return listTrans;
 	}
 	
 	public int getSize(){

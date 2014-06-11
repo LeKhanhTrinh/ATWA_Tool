@@ -1,9 +1,6 @@
 package FSM;
 
 import java.util.ArrayList;
-
-import Components.Transition;
-
 public class Generating {
 
 	int stateNumber;
@@ -11,7 +8,7 @@ public class Generating {
 	ArrayList<Integer> listAddingState;
 	ArrayList<Integer> listTemp;
 	boolean [][] checkUsed;
-	Transition[][] arrayTransitions;
+	ArrayTransitionList[][] arrayTransitions;
 	String[][] nameTransitions;
 	
 	public Generating(FSM fsm) {
@@ -29,12 +26,12 @@ public class Generating {
 		}
 		
 		//initial arrayTransitions
-		arrayTransitions = new Transition[stateNumber][];
+		arrayTransitions = new ArrayTransitionList[stateNumber][];
 		for (int i=0 ; i<stateNumber ; i++){
 			
-			arrayTransitions [i] = new Transition[stateNumber];
+			arrayTransitions [i] = new ArrayTransitionList[stateNumber];
 			for (int j=0 ; j<stateNumber ; j++){
-				arrayTransitions[i][j] = new Transition();
+				arrayTransitions[i][j] = new ArrayTransitionList();
 			}
 		}
 		
@@ -48,17 +45,6 @@ public class Generating {
 			}
 		}
 		
-		//initial Values
-		initialValues(fsm);
-		
-		//Print
-		for (int i=0; i<stateNumber; i++){
-			for (int j=0; j<stateNumber; j++){
-				if (arrayTransitions[i][j].getEventSize() > 0){
-					System.out.println(i + "; " + j + ": " + arrayTransitions[i][j].printAllEvent());	
-				}
-			}
-		}
 		
 		System.out.println("END STATE LIST:");
 		for (int i=0 ; i<listEndState.size() ; i++){
@@ -75,7 +61,8 @@ public class Generating {
 			int beginState = fsm.getIndexBeginStateOfTransition(i);
 			int endState = fsm.getIndexEndStateOfTransition(i);
 			
-			arrayTransitions[beginState][endState] = fsm.getTransition(i);
+			nameTransitions[beginState][endState] = fsm.getNameOfTransition(i);
+			arrayTransitions[beginState][endState].Add(fsm.getNameOfTransition(i));
 			checkUsed[beginState][endState] = false;
 		}
 		
@@ -105,14 +92,14 @@ public class Generating {
 	
 	//Depth First Search
 	private void DFS(int i, ThePath PATH){
-		int t=0;
+		int t = 0;
 		for (int j=0 ; j<stateNumber ; j++){
 			
-			if (arrayTransitions[i][j].getEventSize()>0 && checkUsed[i][j]==false){
+			if (arrayTransitions[i][j].getSize()>0 && checkUsed[i][j]==false){
 				t++;
 				
-				arrayTransitions[i][j].getEvents().remove(0);
-				if (arrayTransitions[i][j].getEventSize() == 0){
+				arrayTransitions[i][j].RemoveHead();
+				if (arrayTransitions[i][j].IsEmpty()){
 					checkUsed[i][j] = true;
 				}
 				listTemp.add(j);
@@ -123,7 +110,7 @@ public class Generating {
 			}
 		}
 		
-		if (t==0){
+		if (t == 0){
 			System.out.println();
 			PATH.addNewPath(listTemp);
 		}
@@ -143,11 +130,14 @@ public class Generating {
 	public void addToPath(ThePath PATH){
 		for (int i=0 ; i<PATH.getSize() ; i++){
 			if (!inEndStateList(PATH.getLastStateOfThePath(i), listEndState)){
+				
 				System.out.println("i=" + i);
 				addToTheTailOfPath(PATH.getLastStateOfThePath(i));
+				
 				for (int j=0 ; j<listAddingState.size() ; j++){
 					PATH.getPathByIndex(i).add(listAddingState.get(j));
 				}
+				
 				while (!listAddingState.isEmpty()){
 					listAddingState.remove(0);
 				}
@@ -182,5 +172,50 @@ public class Generating {
 			}
 		}
 		return false;
+	}
+}
+
+class ArrayTransitionList{
+	ArrayList<String> arrList;
+	
+	public ArrayTransitionList() {
+		// TODO Auto-generated constructor stub
+		arrList = new ArrayList<String>();
+	}
+	
+	public ArrayTransitionList(ArrayList<String> arrList){
+		this.arrList = arrList;
+	}
+	
+	public void Add(String element){
+		arrList.add(element);
+	}
+	
+	public void RemoveHead(){
+		arrList.remove(0);
+	}
+	
+	public boolean IsEmpty(){
+		return arrList.isEmpty();
+	}
+	
+	public String printAll(){
+		String rs = "{";
+		if (arrList.size() > 0){
+			for (int i=0 ; i<arrList.size()-1 ; i++){
+				rs += arrList.get(i) + ", ";
+			}
+			rs += arrList.get(arrList.size()-1);
+		}
+		rs += "}";
+		return rs;
+	}
+	
+	public int getSize(){
+		return arrList.size();
+	}
+	
+	public String getByIndex(int i){
+		return arrList.get(i);
 	}
 }

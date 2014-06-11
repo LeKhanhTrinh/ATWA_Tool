@@ -16,6 +16,10 @@ public class ListEvents {
 		listEvent.add(e);
 	}
 	
+	public void removeEvent(int i){
+		listEvent.remove(i);
+	}
+	
 	public Event getEventByIndex(int index){
 		return listEvent.get(index);
 	}

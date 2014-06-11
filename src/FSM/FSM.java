@@ -18,16 +18,16 @@ public class FSM {
 	private ListTransition listTransition;
 	public ListStates listState;
 	
-	public FSM(int _numOfTest, String _name, State _beginState, ListStates _listEndState, 
-					ListTransition _listTransition, ListStates _listState) {
+	public FSM(int _numOfTest, String _name, ListStates _listStates, ListTransition _listTransition, 
+					State _beginState, ListStates _listEndStates) {
 		// TODO Auto-generated constructor stub
 		numOfTest = _numOfTest;
 		beginState = _beginState;
-		listEndState = _listEndState;
+		listEndState = _listEndStates;
 		name = _name;
 		listTransition = _listTransition;
-		listState = _listState;
-	}
+		listState = _listStates;
+	} 
 	
 	//Add
 	//-----------------------------------------------------------------
@@ -44,32 +44,56 @@ public class FSM {
 	public ListTransitionSequence conVertFromPath(ThePath PATH){
 		ListTransitionSequence transqlist = new ListTransitionSequence();
 		
-		for (int i=0; i<PATH.getSize(); i++){
-			TransitionSequence transq = new TransitionSequence();
-			
-			ArrayList<Integer> arr1 = PATH.getPathByIndex(i);
-
-			//System.out.println("Size = " + arr1.size());
-			for (int j=0; j<arr1.size()-1; j++){
-				Transition tran1 = listTransition.findBy2S(
-						listState.getStateByIndex(arr1.get(j)), 
-						listState.getStateByIndex(arr1.get(j+1)));
-
-				transq.addTransition(tran1);
+		//Khoi tao mang dem
+				int[][] count = new int [listState.getSize()][];
+				for (int i=0 ; i<listState.getSize() ; i++){
+					
+					count[i] = new int [listState.getSize()];
+					for (int j=0 ; j<listState.getSize() ; j++){
+						count[i][j] = 0;
+					}
+				}
 				
-			}
-			
-			transqlist.addTransitionSequence(transq);
-		}
+				for (int i=0; i<PATH.getSize(); i++){
+					TransitionSequence transq = new TransitionSequence();
+					
+					ArrayList<Integer> arr1 = PATH.getPathByIndex(i);
+
+					//System.out.println("Size = " + arr1.size());
+					for (int j=0; j<arr1.size()-1; j++){
+						
+						ArrayList<Transition> listTrans = listTransition.findListBy2S(listState.getStateByIndex(arr1.get(j)), 
+								listState.getStateByIndex(arr1.get(j+1)));
+						
+						Transition tran1;
+						
+						if (listTrans.size() > 1){
+							if (count[arr1.get(j)][arr1.get(j+1)] >= listTrans.size()){
+								tran1 = listTrans.get(listTrans.size()-1);
+							}else{
+								tran1 = listTrans.get(count[arr1.get(j)][arr1.get(j+1)]);
+							}
+						}else{
+							tran1 = listTrans.get(0);
+						}
+						count[arr1.get(j)][arr1.get(j+1)]++;
+						transq.addTransition(tran1);
+					}
+					
+					transqlist.addTransitionSequence(transq);
+				}
 		
 		return transqlist;
 	}
 	
 	public ListTransitionSequence getPath_DFS(){
+		
 		//System.out.println("chua bao search");
 		Generating searcher = new Generating(this);
+		
 		//System.out.println("Da khai bao search");
 		ThePath PATH = searcher.AutoGeneratingTestPath();
+		
 		//System.out.println("Path khoi tao: ");
 		return conVertFromPath(PATH);
 	}
@@ -195,6 +219,13 @@ public class FSM {
 		System.out.println("G - Transition number:" + listTransition.getSize());
 	}
 	
+	public void printTransition(){
+		System.out.println("Transition: ");
+		for (int i=0 ; i<listTransition.getSize() ; i++){
+			System.out.println(i + ":");
+			listTransition.getTransitionByIndex(i).printTrans();
+		}
+	}
 	
 	public void printBeginState(){
 		System.out.println("BEGIN STATE:\t" + beginState.getName() + "\n");

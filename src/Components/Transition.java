@@ -1,9 +1,6 @@
 package Components;
 
-import java.util.ArrayList;
-
 import org.openqa.selenium.WebDriver;
-
 import Argument.StatusValue;
 import WebElements.ListStatusOfElement;
 import WebElements.ListWebElement;
@@ -12,7 +9,7 @@ import WebElements.WebElements;
 
 public class Transition {
 
-	ArrayList<Event> events;
+	Event event;
 	State beginState;
 	State endState;
 	Condition transCondition;
@@ -21,60 +18,12 @@ public class Transition {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Transition(ArrayList<Event> _events, State _beginState, State _endState, Condition _transCondition) {
+	public Transition(Event _event, State _beginState, State _endState, Condition _transCondition) {
 		// TODO Auto-generated constructor stub
-		events = _events;
+		event = _event;
 		beginState = _beginState;
 		endState = _endState;
 		transCondition = _transCondition;
-	}
-	
-	public boolean transExist(WebDriver driver, int test_case){
-		
-		boolean test = true;
-		try{
-
-			ListWebElement  listWebElement = beginState.listWebElement;
-			ListStatusOfElement listStatusOfElement = beginState.listStatusOfElement;
-			
-			for (int i=0; i<listStatusOfElement.getSize(); i++){
-				
-				StatusOfElement statusOfElement = listStatusOfElement.getElementByIndex(i);
-				if (statusOfElement.getStatus().compareTo(StatusValue.IGNORE)==0){
-					continue;
-				}
-				
-				WebElements webElements = listWebElement.getElementById(statusOfElement.getId());
-				if (webElements.getValueByTestCase(test_case).compareTo(StatusValue.IGNORE)==0){
-					continue;
-				}
-				
-				//Kiem tra condition
-				if (transCondition !=null){
-						
-					test=true;
-					//Lay gia tri cua elem tai testcase n
-					String valueTestCase = webElements.getValueOfElementByTestCase(transCondition.getHtml_id(),test_case); 
-					
-					if (valueTestCase != null){
-						
-						if (transCondition.getHtml_id().equals(webElements.getHtml_id()) 
-								&& !transCondition.getValues().equals(valueTestCase) ){
-							
-							test = false;
-							break;
-						}else{
-							test = true;
-						}
-					}
-				}
-			}
-			
-		}catch (Exception e) {
-			// TODO: handle exception
-		}
-		
-		return test;
 	}
 	
 	public boolean doThisTrans(WebDriver driver, int test_case){
@@ -128,24 +77,26 @@ public class Transition {
 	}
 	
 	public void printTrans(){
-		System.out.println("\t"+beginState.getName() + "----" + events.get(0).getName() + "---->" + endState.getName());
+		//System.out.println("\t"+beginState.getName() + "----" + listEvents.getEventByIndex(0).getName() + "---->" + endState.getName());
+		System.out.println("\t"+beginState.getName() + "----" + event.getName() + "---->" + endState.getName());
 	}
 	
+	/*
 	public String printAllEvent(){
 		
 		String result = "{";
-		if (events.size() > 0){
-			for (int i=0 ; i<events.size()-1 ; i++){
-				result += events.get(i) + ", ";
+		if (listEvents.getSize() > 0){
+			for (int i=0 ; i<listEvents.getSize()-1 ; i++){
+				result += listEvents.getEventByIndex(i) + ", ";
 			}
-			result += events.get(events.size()-1);
+			result += listEvents.getEventByIndex(listEvents.getSize()-1);
 		}
 		result += "}";
 		return result;
 	}
-	
+	*/
 	public String getName(){
-		return events.get(0).getName();
+		return event.getName();
 	}
 	
 	public State getBeginState(){
@@ -157,22 +108,24 @@ public class Transition {
 	}
 	
 	public Event getEvent(){
-		return events.get(0);
+		return event;
 	}
 	
+	/*
 	public int getEventSize(){
-		return events.size();
+		return listEvents.getSize();
 	}
 	
-	public ArrayList<Event> getEvents(){
-		return events;
+	public ListEvents getEvents(){
+		return listEvents;
 	}
+	*/
 	
 	public void setNameEndState(String name){
 		endState.setName(name);
 	}
 	
 	public void setNameEvent(String name){
-		events.get(0).setName(name);
+		event.setName(name);
 	}
 }
