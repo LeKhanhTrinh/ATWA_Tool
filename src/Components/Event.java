@@ -1,86 +1,67 @@
-package Components;
+package components;
+
+import htmlElement.ListWebElements;
+import htmlElement.WebElements;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import Argument.EventsAction;
-import WebElements.ListWebElement;
-import WebElements.WebElements;
+import arg.WebdriverActionType;
+
 
 public class Event {
-
-	public String name;
+	
+	String name;
 	String html_id;
 	String action;
-	ListWebElement listWebElement;
+	ListWebElements listElement;
 	
-	public Event(String _name, String _html_id, String _action, ListWebElement _listWebElement) {
-		// TODO Auto-generated constructor stub
-		name= _name;
-		html_id = _html_id;
-		action= _action;
-		listWebElement= _listWebElement;
+	public Event(String _name, String _html_id, String _action, ListWebElements _listElement){
+		name=_name;
+		html_id =_html_id;
+		action=_action;
+		listElement=_listElement;
 	}
 	
-	//do the event
-	public void doEvent(WebDriver driver, int test_current){
-		
+	public void doEvent(WebDriver driver, int test_current) {
+		//System.out.println("doing event called");
 		try{
+
+			WebElements elem = listElement.getElementByName(html_id);
+			WebElement webelem = driver.findElement(By.id(elem.getHtml_id()));
 			
-			WebElements webElements = listWebElement.getElementByHTML(html_id);
-			WebElement webElementDriver = driver.findElement(By.id(webElements.getHtml_id()));
-			
-			if (this.action.compareTo(EventsAction.ADDTEXT)==0){
-				webElementDriver.sendKeys(webElements.getValueByTestCase(test_current));
+			if (this.action.compareTo(WebdriverActionType.ADDTEXT)==0){
+				webelem.sendKeys(elem.getValueAt(test_current));
 			} else
-			if (this.action.compareTo(EventsAction.DELTEXT)==0){
-				webElementDriver.clear();
+			if (this.action.compareTo(WebdriverActionType.DELTEXT)==0){
+				webelem.clear();
 			} else
-			if (this.action.compareTo(EventsAction.CLICK)==0){
-				webElementDriver.click();
+			if (this.action.compareTo(WebdriverActionType.CLICK)==0){
+				webelem.click();
 			}
-			if (this.action.compareTo(EventsAction.SELECT)==0){
-				webElementDriver.click();
+			if (this.action.compareTo(WebdriverActionType.SELECT)==0){
+				webelem.click();
 			}
 			
 		} catch (Exception e){
 			e.printStackTrace();
 			
 		}
+
 	}
 	
-	//Getter
-	public String getName() {
+	//Getter & Setter
+	public String getName(){
 		return name;
 	}
 	
-	public String getAction() {
+	public String getAction(){
 		return action;
 	}
 	
-	public String getHtml_id() {
-		return html_id;
-	}
-	
-	public ListWebElement getListWebElement() {
-		return listWebElement;
-	}
-	
-	//Setters
-	public void setName(String name) {
+	public void setName(String name){
 		this.name = name;
 	}
 	
-	public void setAction(String action) {
-		this.action = action;
-	}
-	
-	public void setHtml_id(String html_id) {
-		this.html_id = html_id;
-	}
-	
-	public void setListWebElement(ListWebElement listWebElement) {
-		this.listWebElement = listWebElement;
-	}
 }

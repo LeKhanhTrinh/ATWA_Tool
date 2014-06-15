@@ -1,7 +1,7 @@
-package Components;
+package components;
+
 
 public class Condition {
-
 	String html_id;
 	String values;
 	
@@ -15,7 +15,7 @@ public class Condition {
 	}
 	
 	/*
-	 * Getter & Setter
+	 * Ham SET - GET 
 	 */
 	
 	public void setHtml_id(String html_id) {
@@ -33,4 +33,8 @@ public class Condition {
 	public String getValues() {
 		return values;
 	}
+	
+	/*
+	 * Ham chuc nang
+	 */
 }

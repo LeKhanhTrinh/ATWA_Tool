@@ -1,30 +1,34 @@
-package Components;
+package components;
 
 import java.util.ArrayList;
 
 public class ListTransitionSequence {
-
-	ArrayList<TransitionSequence> listTransitionSequences;
+	ArrayList<TransitionSequences> listTranSq;
 	
-	public ListTransitionSequence() {
-		// TODO Auto-generated constructor stub
-		listTransitionSequences = new ArrayList<TransitionSequence>();
+	public ListTransitionSequence(){
+		listTranSq = new ArrayList<TransitionSequences>();
 	}
 	
-	public void addTransitionSequence(TransitionSequence transitionSequence){
-		listTransitionSequences.add(transitionSequence);
+	public void addTransitionsq(TransitionSequences _tranSq){
+		listTranSq.add(_tranSq);
 	}
 	
-	public TransitionSequence getTransitionSequenceByIndex(int i){
-		return listTransitionSequences.get(i);
+	public TransitionSequences getTransitionByIndex(int i){
+		return listTranSq.get(i);
 	}
 	
-	public void removeTransitionSequence(int i){
-		listTransitionSequences.remove(i);
+	
+	public int getSize(){
+		return listTranSq.size();
 	}
 	
-	public void removeTransitionSequence(TransitionSequence transitionSequence){
-		listTransitionSequences.remove(transitionSequence);
+	public void removeTransq(int i){
+		listTranSq.remove(i);
+	}
+	
+	
+	public void removeTransq(TransitionSequences transq){
+		listTranSq.remove(transq);
 	}
 	
 	public String logElems(){
@@ -32,11 +36,10 @@ public class ListTransitionSequence {
 		result += "Number of Transition Sequence: " + getSize() + "\n";
 		
 		for (int i=0 ; i<getSize() ; i++){
-			System.out.println("Transition Sequence " + i + " - " + listTransitionSequences.get(i).getSize() + ":");
-			result += "Transition Sequence " + (i+1) + " - " + listTransitionSequences.get(i).getSize() + ":\n";
-			result += listTransitionSequences.get(i).logTransq();
+			System.out.println("Transition Sequence " + i + " - " + listTranSq.get(i).getSize() + ":");
+			result += "Transition Sequence " + (i+1) + " - " + listTranSq.get(i).getSize() + ":\n";
+			result += listTranSq.get(i).logTransq();
 		}
-		
 		
 		return result;
 	}
@@ -45,12 +48,9 @@ public class ListTransitionSequence {
 		System.out.println("Number of Transition Sequence: " + getSize());
 		
 		for (int i=0 ; i<getSize() ; i++){
-			System.out.println("Transition Sequence " + i + " - " + listTransitionSequences.get(i).getSize() + ":");
-			listTransitionSequences.get(i).printTransq();
+			System.out.println("Transition Sequence " + i + " - " + listTranSq.get(i).getSize() + ":");
+			listTranSq.get(i).printTransq();
 		}
 	}
-	
-	public int getSize(){
-		return listTransitionSequences.size();
-	}
+
 }
