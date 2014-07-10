@@ -1,5 +1,8 @@
 package components;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import htmlElement.ListWebElements;
 import htmlElement.ElementStatus;
 import htmlElement.ListElementStatus;
@@ -137,6 +140,8 @@ public class State {
 						
 						System.out.println("f2");
 						System.out.println(value+":\t"+eh.getValueAt(test_current));
+						WebdriverCommand.detailS += "Real Output (\"" + value + "\") and Expected Output (\"" 
+										+ eh.getValueAt(test_current) + "\") of element: \"" + eh.getHtml_id() + "\" are different. \n";
 						if (eh.getValueAt(test_current).compareTo(ElementStatusValue.IGNORE)==0){
 							continue;
 						}
@@ -144,6 +149,7 @@ public class State {
 					}
 				} else if (value.compareTo(e.getStatus())!=0){
 					System.out.println("Strings not compare("+value+"):"+eh.getHtml_id()+"_"+e.getStatus());
+					WebdriverCommand.detailS += "Strings not compare("+value+"):"+eh.getHtml_id()+"_"+e.getStatus() + ". \n";
 					System.out.println("f3");
 					return false;
 				}
@@ -152,7 +158,11 @@ public class State {
 			
 			return true;
 		} catch (Exception e){
-			System.out.println("check fail");
+			//System.out.println("check fail");
+			String temp = getStackTrace(e);
+			int beginSub = temp.indexOf("selector");
+			String temp1 = temp.substring(beginSub + 10, temp.indexOf("}"));
+			WebdriverCommand.detailS += "Cannot match HTML element: " + temp1 + ". \n";
 			return false;
 		}
 	}
@@ -162,6 +172,11 @@ public class State {
 	}
 	
 	
-	
+	public static String getStackTrace(final Throwable throwable) {
+	     final StringWriter sw = new StringWriter();
+	     final PrintWriter pw = new PrintWriter(sw, true);
+	     throwable.printStackTrace(pw);
+	     return sw.getBuffer().toString();
+	}
 	
 }

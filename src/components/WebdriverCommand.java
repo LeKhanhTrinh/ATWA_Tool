@@ -29,7 +29,7 @@ public class WebdriverCommand {
 	String name;
 	String testPathS = "";
 	String theResultS = "";
-	String detailS = "";
+	public static String detailS = "";
 	public String textRS = "";
 	public String textFail = "";
 	
@@ -217,9 +217,10 @@ public class WebdriverCommand {
 			if (!s2.checkState(driver, test_c)){
 				passone = false;
 				textFail += "\n\nFAIL HERE!!\n";
-				textFail += "FAIL STATE: \"" + s2.getName() + "\" (We can't found this state)\n";
+				//textFail += "FAIL STATE: \"" + s2.getName() + "\" (cannot find this state)\n";
+				textFail += "FAIL STATE: \"" + s2.getName() + "\" (cannot find this state)\n";
 				theResultS = "FAIL\n";
-				detailS += "FAIL STATE: \"" + s2.getName() + "\" (We can't found this state)\n";
+				detailS += "FAIL STATE: \"" + s2.getName() + "\"\n";
 				System.out.println("FAIL STATE");
 				break;
 			}
